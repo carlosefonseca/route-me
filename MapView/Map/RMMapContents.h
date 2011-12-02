@@ -50,6 +50,7 @@ enum {
 #define kDefaultMaximumZoomLevel 25.0
 #define kDefaultInitialZoomLevel 13.0
 
+@class RMCircle;
 @class RMMarkerManager;
 @class RMProjection;
 @class RMMercatorToScreenProjection;
@@ -81,11 +82,23 @@ enum {
  At some point, it's likely that RMMapContents and RMMapView will be merged into one class.
  
  */
-@interface RMMapContents : NSObject
+@interface RMMapContents : NSObject <CLLocationManagerDelegate>
 {
+ /// Flag indicating if the map view should show the user location (default value is NO)
+  BOOL showsUserLocation;
+
 	/// This is the underlying UIView's layer.
 	CALayer *layer;
 	
+ /// Location manager is used to determine user location; only active if user location is to be shown
+  CLLocationManager* locationManager;
+
+ /// Circle indicates the accuracy with which the user's location could be determined
+  RMCircle* userLocationAccuracyIndicator;
+
+ /// Marker for displaying the user location
+  RMMarker* userLocationMarker;
+
 	RMMarkerManager *markerManager;
 	/// subview for the image displayed while tiles are loading. Set its contents by providing your own "loading.png".
 	RMMapLayer *background;
@@ -240,6 +253,24 @@ enum {
  \endcode
  */
 -(void)removeAllCachedImages;
+
+/** @name User location handling
+  * @{ */
+
+ /** @remark If location services is disabled and the map view should show the user's location the framework prompts the user to ask him whether location services
+             should be enabled.\n
+             You may check beforehand if location services is enabled on the device. */
+  @property (nonatomic) BOOL showsUserLocation;
+
+ /// Checks if the user location is visible
+ /** @return If the user location (incl. its accuracy range) is visible YES is returned, otherwise NO. NO is also returned if no user location is shown. */
+  -(BOOL) isUserLocationVisible;
+
+ /// Returns the user location
+ /** @return The user location is returned if it could be determined. If it could not be determined or the user location should not be shown nil is returned. */
+  -(CLLocation*) userLocation;
+
+/** @} */
 
 @end
 

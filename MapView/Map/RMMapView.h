@@ -92,6 +92,9 @@ git clone git://github.com/route-me/route-me.git
 #import "RMMapViewDelegate.h"
 #import "RMMapContents.h"
 
+@class RMMapContents;
+@class RMMarker;
+
 /*! 
  \struct RMGestureDetails
  iPhone-specific mapview stuff. Handles event handling, whatnot.
@@ -102,8 +105,6 @@ typedef struct {
 	float averageDistanceFromCenter;
 	int numTouches;
 } RMGestureDetails;
-
-@class RMMapContents;
 
 /*! 
  \brief Wrapper around RMMapContents for the iPhone.
@@ -128,7 +129,7 @@ typedef struct {
         CGFloat rotation;
 	
 @private
-   	BOOL _delegateHasBeforeMapMove;
+  BOOL _delegateHasBeforeMapMove;
 	BOOL _delegateHasAfterMapMove;
 	BOOL _delegateHasBeforeMapZoomByFactor;
 	BOOL _delegateHasAfterMapZoomByFactor;

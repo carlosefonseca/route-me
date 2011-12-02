@@ -49,11 +49,11 @@
 @synthesize decelerationFactor;
 @synthesize deceleration;
 
-@synthesize rotation;
-
 @synthesize enableDragging;
 @synthesize enableZoom;
 @synthesize enableRotate;
+
+@synthesize rotation;
 
 #pragma mark --- begin constants ----
 #define kDefaultDecelerationFactor .88f
@@ -83,7 +83,7 @@
 	self.backgroundColor = [UIColor grayColor];
 	
 	_constrainMovement=NO;
-	
+
 //	[[NSURLCache sharedURLCache] removeAllCachedResponses];
 }
 
@@ -134,7 +134,9 @@
 -(void) dealloc
 {
 	LogMethod();
+
 	self.contents = nil;
+
 	[super dealloc];
 }
 
@@ -572,7 +574,7 @@
 		if(lastGesture.numTouches == 0)
 		{
 			CALayer* hit = [self.contents.overlay hitTest:[touch locationInView:self]];
-			//		RMLog(@"LAYER of type %@",[hit description]);
+            RMLog(@"LAYER of type %@",[hit description]);
 			
 			if (hit != nil) {
 				CALayer *superlayer = [hit superlayer]; 
@@ -587,9 +589,14 @@
 						[delegate tapOnLabelForMarker:(RMMarker*)superlayer onMap:self];
 					}
 				} else if ([superlayer superlayer] != nil && [[superlayer superlayer] isKindOfClass: [RMMarker class]]) {
-                                        if (_delegateHasTapOnLabelForMarker) {
-                                                [delegate tapOnLabelForMarker:(RMMarker*)[superlayer superlayer] onMap:self];
-                                        } 
+                    if (_delegateHasTapOnLabelForMarker) {
+                        [delegate tapOnLabelForMarker:(RMMarker*)[superlayer superlayer] onMap:self];
+                    }
+                } else if ([superlayer superlayer] != nil && [[[superlayer superlayer] superlayer] isKindOfClass: [RMMarker class]]) {
+                    if (_delegateHasTapOnLabelForMarker) {
+                        [delegate tapOnLabelForMarker:(RMMarker*)[[superlayer superlayer] superlayer] onMap:self onLayer:superlayer];
+                    }
+                    
 				} else if (_delegateHasSingleTapOnMap) {
 					[delegate singleTapOnMap: self At: [touch locationInView:self]];
 				}
@@ -759,5 +766,6 @@
 
  	if (_delegateHasAfterMapRotate) [delegate afterMapRotate: self toAngle: rotation];
 }
+
 
 @end

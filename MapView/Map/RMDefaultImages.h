@@ -1,5 +1,5 @@
 //
-//  RMMarkerManager.h
+//  RMDefaultImages.h
 //
 // Copyright (c) 2008-2009, Route-Me Contributors
 // All rights reserved.
@@ -25,42 +25,19 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
+///
+/// @file RMDefaultImages.h
+/// @brief Implements accessor functions for images used in route-me.
+///
+/// As image files cannot be incorporated into standard (static) libraries but only
+/// in frameworks these image files have to be separated copied into the final
+/// product. To prevent that these image files are being forgotten / lost this header
+/// file and its source file incorporate them in C-structures and functions
+/// are implemented to access them.
+///
+
 #import <UIKit/UIKit.h>
 
-#import "RMMapContents.h"
-#import "RMMarker.h"
-
-@class RMProjection;
-
-@interface RMMarkerManager : NSObject {
-	RMMapContents *contents;
-        CGAffineTransform rotationTransform;
-}
-
-@property (assign, readwrite)  RMMapContents *contents;
-
-- (id)initWithContents:(RMMapContents *)mapContents;
-
-- (void)addMarker:(RMMarker*)marker atProjectedPoint:(RMProjectedPoint)projectedPoint atOverlayIndex:(unsigned)index;
-- (void)addMarker:(RMMarker *)marker atProjectedPoint:(RMProjectedPoint)projectedPoint;
-- (void) addMarker: (RMMarker*)marker AtLatLong:(CLLocationCoordinate2D)point;
-- (void) removeMarkers;
-- (void) hideAllMarkers;
-- (void) unhideAllMarkers;
-
-- (NSArray *)markers;
-- (void) removeMarker:(RMMarker *)marker;
-- (void) removeMarkers:(NSArray *)markers;
-- (CGPoint) screenCoordinatesForMarker: (RMMarker *)marker;
-- (CLLocationCoordinate2D) latitudeLongitudeForMarker: (RMMarker *) marker;
-- (NSArray *) markersWithinScreenBounds;
-- (BOOL) isMarkerWithinScreenBounds:(RMMarker*)marker;
-- (BOOL) isMarker:(RMMarker*)marker withinBounds:(CGRect)rect;
-- (BOOL) managingMarker:(RMMarker*)marker;
-- (void) moveMarker:(RMMarker *)marker AtLatLon:(RMLatLong)point;
-- (void) moveMarker:(RMMarker *)marker AtXY:(CGPoint)point;
-- (void)setRotation:(float)angle;
-
-
-
-@end
+ /// Function to return the image of the user location marker
+ /** @return An autoreleased image of the default user location marker. */
+  UIImage* GetDefaultUserLocationMarkerImage(void);

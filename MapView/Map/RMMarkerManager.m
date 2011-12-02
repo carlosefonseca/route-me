@@ -56,12 +56,19 @@
 #pragma mark 
 #pragma mark Adding / Removing / Displaying Markers
 
-/// place the (new created) marker onto the map at projected point and take ownership of it
-- (void)addMarker:(RMMarker *)marker atProjectedPoint:(RMProjectedPoint)projectedPoint {
+/// place the (newly created) marker onto the map at projected point and overlay position
+-(void) addMarker:(RMMarker*)marker atProjectedPoint:(RMProjectedPoint)projectedPoint atOverlayIndex:(unsigned)index
+{
 	[marker setAffineTransform:rotationTransform];
 	[marker setProjectedLocation:projectedPoint];
 	[marker setPosition:[[contents mercatorToScreenProjection] projectXYPoint:projectedPoint]];
-	[[contents overlay] addSublayer:marker];
+	[[contents overlay] insertSublayer:marker atIndex:index];
+}
+
+/// place the (new created) marker onto the map at projected point and take ownership of it
+- (void)addMarker:(RMMarker *)marker atProjectedPoint:(RMProjectedPoint)projectedPoint
+{
+  [self addMarker:marker atProjectedPoint:projectedPoint atOverlayIndex:[[[contents overlay] sublayers] count]];
 }
 
 /// place the (newly created) marker onto the map and take ownership of it
@@ -69,7 +76,7 @@
 - (void) addMarker: (RMMarker*)marker AtLatLong:(CLLocationCoordinate2D)point
 {
 	WarnDeprecated();
-	[self addMarker:marker atProjectedPoint:[[contents projection] latLongToPoint:point]];
+	[self addMarker:marker atProjectedPoint:[[contents projection] latLongToPoint:point] atOverlayIndex:[[[contents overlay] sublayers] count]];
 }
 
 /// \bug see http://code.google.com/p/route-me/issues/detail?id=75
